@@ -13,4 +13,4 @@ consumer = KafkaConsumer(
 print("StreamForge Consumer started...")
 
 for message in consumer:
-    print("Received:", message.value)
+    print("Received:", message.value )
