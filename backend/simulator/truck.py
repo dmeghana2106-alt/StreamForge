@@ -27,7 +27,7 @@ class TruckSimulator:
         # Simulate fuel consumption
         self.fuel_level = max(
             0.0,
-            self.fuel_level - random.uniform(0.01, 0.05)
+            self.fuel_level - random.uniform(0.01, 0.05 )
         )
 
         # Simulate engine temperature
