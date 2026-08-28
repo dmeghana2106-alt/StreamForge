@@ -50,13 +50,18 @@ function App() {
       setLastUpdated(new Date());
 
       setChartData((previous) => {
-        const newValue = Math.max(
-          15,
-          Math.min(100, Number(statsData.events_per_second) / 20 || 35)
-        );
+  const baseValue =
+    Number(statsData.events_per_second) / 20 || 35;
 
-        return [...previous.slice(1), newValue];
-      });
+  const variation = (Math.random() - 0.5) * 20;
+
+  const newValue = Math.max(
+    15,
+    Math.min(100, baseValue + variation)
+  );
+
+  return [...previous.slice(1), newValue];
+});
 
       setLoading(false);
     } catch (error) {
@@ -386,16 +391,14 @@ function App() {
                 </div>
 
                 <div className="mini-bars">
-                  {[35, 50, 45, 60, 54, 70, 64, 77, 68, 85, 76, 92].map(
-                    (height, index) => (
-                      <div
-                        key={index}
-                        className="mini-bar"
-                        style={{ height: `${height}%` }}
-                      ></div>
-                    )
-                  )}
-                </div>
+  {chartData.map((height, index) => (
+    <div
+      key={index}
+      className="mini-bar"
+      style={{ height: `${height}%` }}
+    ></div>
+  ))}
+</div>
               </div>
 
               <div className="throughput-footer">
