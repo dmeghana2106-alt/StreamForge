@@ -9,6 +9,7 @@ from backend.kafka.topics import (
 )
 from backend.processing.windowing import FiveMinuteWindow
 from backend.state.rocksdb_store import RocksDBStateStore
+from backend.analytics.metrics import RealTimeMetrics
 
 
 class StreamProcessor:
@@ -16,6 +17,9 @@ class StreamProcessor:
 
         # Persistent state
         self.state_store = RocksDBStateStore()
+
+        # Real-time analytics
+        self.metrics = RealTimeMetrics()
 
         # Kafka consumer
         self.consumer = Consumer(
@@ -38,7 +42,7 @@ class StreamProcessor:
         """
         Processing pipeline:
 
-        Consume → Filter → Map → Window → RocksDB
+        Consume → Filter → Map
         """
 
         # FILTER
@@ -123,6 +127,48 @@ class StreamProcessor:
         print("=" * 60)
         print()
 
+    def print_metrics(self):
+
+        metrics = self.metrics.get_metrics()
+
+        print()
+        print("=" * 60)
+        print("REAL-TIME ANALYTICS")
+        print("=" * 60)
+
+        print(
+            f"Total Events: "
+            f"{metrics['total_events']}"
+        )
+
+        print(
+            f"Events / Sec: "
+            f"{metrics['events_per_second']}"
+        )
+
+        print(
+            f"Active Trucks: "
+            f"{metrics['active_trucks']}"
+        )
+
+        print(
+            f"Average Temperature: "
+            f"{metrics['average_temperature_c']}°C"
+        )
+
+        print(
+            f"Average Speed: "
+            f"{metrics['average_speed_kmh']} km/h"
+        )
+
+        print(
+            f"Average Fuel: "
+            f"{metrics['average_fuel_level_percent']}%"
+        )
+
+        print("=" * 60)
+        print()
+
     def flush_windows(self):
 
         results = self.window.flush()
@@ -139,9 +185,7 @@ class StreamProcessor:
         print("=" * 60)
 
         for result in results:
-            self.print_window_result(
-                result
-            )
+            self.print_window_result(result)
 
     def run(self):
 
@@ -169,7 +213,7 @@ class StreamProcessor:
         print(
             "Pipeline: "
             "Consume → Filter → Map → "
-            "5-Minute Window → RocksDB"
+            "Analytics → 5-Minute Window → RocksDB"
         )
 
         print(
@@ -232,6 +276,11 @@ class StreamProcessor:
                             f"{processed_event['fuel_level_percent']:.2f}%"
                         )
 
+                        # Update real-time analytics
+                        self.metrics.record_event(
+                            processed_event
+                        )
+
                         self.add_to_window(
                             processed_event
                         )
@@ -254,10 +303,16 @@ class StreamProcessor:
 
         finally:
 
+            # Show final analytics
+            self.print_metrics()
+
+            # Flush active windows
             self.flush_windows()
 
+            # Close Kafka
             self.consumer.close()
 
+            # Close RocksDB
             self.state_store.close()
 
             print(
