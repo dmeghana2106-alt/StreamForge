@@ -976,3 +976,109 @@ td {
     gap: 5px;
   }
 }
+/* ============================================================
+   LIVE TRUCK TELEMETRY
+============================================================ */
+
+.truck-panel {
+  margin-top: 24px;
+}
+
+.truck-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(250px, 1fr)
+  );
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.truck-card {
+  background: rgba(20, 18, 35, 0.8);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-radius: 14px;
+  padding: 18px;
+  transition: 0.25s;
+}
+
+.truck-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(139, 92, 246, 0.7);
+  box-shadow:
+    0 10px 30px
+    rgba(139, 92, 246, 0.15);
+}
+
+.truck-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.truck-card-header h3 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.truck-status {
+  font-size: 11px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.truck-status.healthy {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.12);
+}
+
+.truck-status.warning {
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.12);
+}
+
+.truck-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.truck-metrics div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.truck-metrics span {
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+.truck-metrics strong {
+  font-size: 15px;
+  color: white;
+}
+
+.truck-card small {
+  display: block;
+  margin-top: 18px;
+  opacity: 0.5;
+  font-size: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+
+  .truck-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .truck-metrics {
+    grid-template-columns: 1fr;
+  }
+
+}
