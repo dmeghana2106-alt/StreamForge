@@ -137,7 +137,25 @@ const hasRealEvents =
   Array.isArray(eventsData) &&
   eventsData.length > 0;
 
-setStats(hasRealStats ? statsData : demoStats);
+setStats((previous) => {
+  if (hasRealStats) {
+    return statsData;
+  }
+
+  return {
+    total_events:
+      (previous.total_events || demoStats.total_events) +
+      Math.floor(Math.random() * 15 + 5),
+
+    events_per_second:
+      Math.floor(35 + Math.random() * 20),
+
+    active_streams: 6,
+
+    processing_time:
+      Math.floor(14 + Math.random() * 10),
+  };
+});
 
 if (streaming) {
   setEvents(
