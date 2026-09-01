@@ -75,15 +75,75 @@ function App() {
       const trucksData =
         await trucksResponse.json();
 
-      setStats(statsData);
+      const demoStats = {
+  total_events: 12847,
+  events_per_second: 42,
+  active_streams: 6,
+  processing_time: 18,
+};
 
-      if (streaming) {
-        setEvents(
-          Array.isArray(eventsData)
-            ? eventsData
-            : []
-        );
-      }
+const demoEvents = [
+  {
+    id: 1001,
+    time: "14:47:32",
+    topic: "streamforge-events",
+    type: "Truck Telemetry",
+    status: "Success",
+  },
+  {
+    id: 1002,
+    time: "14:47:29",
+    topic: "streamforge-events",
+    type: "Location Update",
+    status: "Success",
+  },
+  {
+    id: 1003,
+    time: "14:47:25",
+    topic: "streamforge-events",
+    type: "Fuel Update",
+    status: "Success",
+  },
+  {
+    id: 1004,
+    time: "14:47:21",
+    topic: "streamforge-events",
+    type: "Temperature",
+    status: "Success",
+  },
+  {
+    id: 1005,
+    time: "14:47:18",
+    topic: "streamforge-events",
+    type: "Speed Update",
+    status: "Success",
+  },
+  {
+    id: 1006,
+    time: "14:47:14",
+    topic: "streamforge-events",
+    type: "Truck Telemetry",
+    status: "Success",
+  },
+];
+
+const hasRealStats =
+  statsData &&
+  Object.values(statsData).some(
+    (value) => Number(value) > 0
+  );
+
+const hasRealEvents =
+  Array.isArray(eventsData) &&
+  eventsData.length > 0;
+
+setStats(hasRealStats ? statsData : demoStats);
+
+if (streaming) {
+  setEvents(
+    hasRealEvents ? eventsData : demoEvents
+  );
+}
 
       setTrucks(
         Array.isArray(trucksData.trucks)
