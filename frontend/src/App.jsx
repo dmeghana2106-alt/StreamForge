@@ -158,9 +158,42 @@ setStats((previous) => {
 });
 
 if (streaming) {
-  setEvents(
-    hasRealEvents ? eventsData : demoEvents
-  );
+  if (hasRealEvents) {
+    setEvents(eventsData);
+  } else {
+    setEvents((previous) => {
+      const currentEvents =
+        previous.length > 0 ? previous : demoEvents;
+
+      const types = [
+        "Truck Telemetry",
+        "Location Update",
+        "Fuel Update",
+        "Temperature",
+        "Speed Update",
+      ];
+
+      const topics = [
+        "truck-telemetry",
+        "vehicle-location",
+        "fuel-monitor",
+        "temperature-data",
+        "vehicle-speed",
+      ];
+
+      const newEvent = {
+        id: Date.now(),
+        time: new Date().toLocaleTimeString(),
+        topic:
+          topics[Math.floor(Math.random() * topics.length)],
+        type:
+          types[Math.floor(Math.random() * types.length)],
+        status: "Success",
+      };
+
+      return [newEvent, ...currentEvents].slice(0, 6);
+    });
+  }
 }
 
       setTrucks(
