@@ -80,7 +80,7 @@ def main():
             time.sleep(2)
 
     except KeyboardInterrupt:
-        print("\nSimulator stopped." )
+        print("\nSimulator stopped.")
 
 
 if __name__ == "__main__":
