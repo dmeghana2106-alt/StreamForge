@@ -11,7 +11,7 @@ function LiveStreams() {
       const response = await fetch(`${API_URL}/trucks`);
 
       if (!response.ok) {
-        throw new Error("Failed to fetch trucks");
+        throw new Error("Failed to fetch trucks" );
       }
 
       const data = await response.json();
