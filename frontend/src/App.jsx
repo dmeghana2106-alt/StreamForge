@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
+import Login from "./Login";
+
 import "./App.css";
 
 const API_URL = "http://127.0.0.1:8000";
@@ -15,6 +17,11 @@ const menuItems = [
 ];
 
 function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
+
+if (!loggedIn) {
+  return <Login onLogin={() => setLoggedIn(true)} />;
+}
   const [stats, setStats] = useState({
     total_events: 0,
     events_per_second: 0,
@@ -211,7 +218,7 @@ if (streaming) {
             100,
             Number(
               statsData.events_per_second
-            ) / 5 || 35
+            ) || 35
           )
         );
 
