@@ -1,24 +1,25 @@
 from collections import defaultdict
 from datetime import datetime, timedelta
 
-from backend.state.rocksdb_store import RocksDBStateStore
-
 
 class FiveMinuteWindow:
     """
-    Maintains a 5-minute tumbling window for truck telemetry.
+    Five-minute event window with persistent state support.
 
-    Window state is persisted in RocksDB so that the processor
-    can recover active windows after a restart.
+    Each truck gets its own five-minute window.
+
+    Active window state is stored in RocksDB when a state
+    store is provided, allowing the window to be restored
+    after a processor restart.
     """
 
     WINDOW_SIZE = timedelta(minutes=5)
 
-    def __init__(self, state_store: RocksDBStateStore):
+    def __init__(self, state_store=None):
         self.state_store = state_store
         self.windows = defaultdict(self._create_window)
 
-        self._load_state()
+        self._restore_windows()
 
     @staticmethod
     def _create_window():
@@ -29,8 +30,38 @@ class FiveMinuteWindow:
             "temperature_sum": 0.0,
         }
 
-    def _get_window_start(self, timestamp: datetime) -> datetime:
-        minute = (timestamp.minute // 5) * 5
+    def _restore_windows(self):
+        """
+        Restore active window state from RocksDB.
+        """
+
+        if self.state_store is None:
+            return
+
+        for key in self.state_store.keys():
+            if not key.startswith("window:"):
+                continue
+
+            truck_id = key.replace(
+                "window:",
+                "",
+                1,
+            )
+
+            saved_window = self.state_store.get(key)
+
+            if saved_window is None:
+                continue
+
+            self.windows[truck_id] = saved_window
+
+    def _get_window_start(
+        self,
+        timestamp: datetime,
+    ) -> datetime:
+        minute = (
+            timestamp.minute // 5
+        ) * 5
 
         return timestamp.replace(
             minute=minute,
@@ -38,81 +69,44 @@ class FiveMinuteWindow:
             microsecond=0,
         )
 
-    def _load_state(self):
+    def _save_window(
+        self,
+        truck_id: str,
+    ):
         """
-        Recover previously saved window state from RocksDB.
+        Save the current window state to RocksDB.
         """
 
-        recovered = 0
-
-        for truck_id in self.state_store.keys():
-            saved_window = self.state_store.get(
-                f"window:{truck_id}"
-            )
-
-            if saved_window is None:
-                continue
-
-            window = self._create_window()
-
-            window["window_start"] = (
-                datetime.fromisoformat(
-                    saved_window["window_start"]
-                )
-                if saved_window["window_start"]
-                else None
-            )
-
-            window["window_end"] = (
-                datetime.fromisoformat(
-                    saved_window["window_end"]
-                )
-                if saved_window["window_end"]
-                else None
-            )
-
-            window["event_count"] = saved_window[
-                "event_count"
-            ]
-
-            window["temperature_sum"] = saved_window[
-                "temperature_sum"
-            ]
-
-            self.windows[truck_id] = window
-            recovered += 1
-
-        if recovered > 0:
-            print(
-                f"Recovered {recovered} active window(s) "
-                f"from RocksDB."
-            )
-
-    def _save_window_state(self, truck_id: str):
-        """
-        Persist the current window state for a truck.
-        """
+        if self.state_store is None:
+            return
 
         window = self.windows[truck_id]
 
-        state = {
-            "window_start": (
-                window["window_start"].isoformat()
-                if window["window_start"]
-                else None
-            ),
-            "window_end": (
-                window["window_end"].isoformat()
-                if window["window_end"]
-                else None
-            ),
+        saved_window = {
+            "window_start": window["window_start"],
+            "window_end": window["window_end"],
             "event_count": window["event_count"],
             "temperature_sum": window["temperature_sum"],
         }
 
         self.state_store.save(
             f"window:{truck_id}",
-            state,
+            saved_window,
+        )
+
+    def _delete_window(
+        self,
+        truck_id: str,
+    ):
+        """
+        Delete a truck's completed window from RocksDB.
+        """
+
+        if self.state_store is None:
+            return
+
+        self.state_store.delete(
+            f"window:{truck_id}"
         )
 
     def add_event(
@@ -122,32 +116,66 @@ class FiveMinuteWindow:
         temperature: float,
     ):
         """
-        Add one telemetry event to the truck's
-        current 5-minute window.
+        Add an event to the truck's current five-minute window.
+
+        If the event belongs to a new window, the previous
+        window result is returned.
         """
 
-        window_start = self._get_window_start(timestamp)
-        window_end = window_start + self.WINDOW_SIZE
+        window_start = self._get_window_start(
+            timestamp
+        )
+
+        window_end = (
+            window_start +
+            self.WINDOW_SIZE
+        )
 
         window = self.windows[truck_id]
 
         # First event for this truck
         if window["window_start"] is None:
 
-            window["window_start"] = window_start
-            window["window_end"] = window_end
+            window["window_start"] = (
+                window_start.isoformat()
+            )
 
-        # Event belongs to a new window
-        elif timestamp >= window["window_end"]:
+            window["window_end"] = (
+                window_end.isoformat()
+            )
+
+            self._add_temperature(
+                window,
+                temperature,
+            )
+
+            self._save_window(
+                truck_id
+            )
+
+            return None
+
+        current_window_end = datetime.fromisoformat(
+            window["window_end"]
+        )
+
+        # Event belongs to a new five-minute window
+        if timestamp >= current_window_end:
 
             result = self._build_result(
                 truck_id,
                 window,
             )
 
-            # Start new window
-            window["window_start"] = window_start
-            window["window_end"] = window_end
+            # Start the new window
+            window["window_start"] = (
+                window_start.isoformat()
+            )
+
+            window["window_end"] = (
+                window_end.isoformat()
+            )
+
             window["event_count"] = 0
             window["temperature_sum"] = 0.0
 
@@ -156,11 +184,8 @@ class FiveMinuteWindow:
                 temperature,
             )
 
-            self._save_window_state(truck_id)
-
-            # Previous window is completed
-            self.state_store.delete(
-                f"completed:{truck_id}"
+            self._save_window(
+                truck_id
             )
 
             return result
@@ -171,14 +196,16 @@ class FiveMinuteWindow:
             temperature,
         )
 
-        # Persist updated state
-        self._save_window_state(truck_id)
+        self._save_window(
+            truck_id
+        )
 
         return None
 
     def flush(self):
         """
-        Close and return all currently active windows.
+        Return all active window results and clear
+        their persistent state.
         """
 
         results = []
@@ -196,9 +223,9 @@ class FiveMinuteWindow:
 
                 results.append(result)
 
-                self.state_store.delete(
-                    f"window:{truck_id}"
-                )
+            self._delete_window(
+                truck_id
+            )
 
         self.windows.clear()
 
@@ -217,23 +244,25 @@ class FiveMinuteWindow:
         truck_id,
         window,
     ):
-
-        event_count = window["event_count"]
+        event_count = window[
+            "event_count"
+        ]
 
         average_temperature = (
-            window["temperature_sum"] / event_count
+            window["temperature_sum"]
+            / event_count
             if event_count > 0
             else 0.0
         )
 
         return {
             "truck_id": truck_id,
-            "window_start": (
-                window["window_start"].isoformat()
-            ),
-            "window_end": (
-                window["window_end"].isoformat()
-            ),
+            "window_start": window[
+                "window_start"
+            ],
+            "window_end": window[
+                "window_end"
+            ],
             "event_count": event_count,
             "average_temperature_c": round(
                 average_temperature,

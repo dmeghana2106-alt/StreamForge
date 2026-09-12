@@ -19,7 +19,13 @@ class StreamProcessor:
         self.metrics = RealTimeMetrics()
         self.anomaly_detector = AnomalyDetector()
 
-        self.alerts = []
+        # Load previously saved alerts from RocksDB
+        saved_alerts = self.state_store.get("alerts")
+
+        if saved_alerts is None:
+            self.alerts = []
+        else:
+            self.alerts = saved_alerts
 
         self.consumer = Consumer(
             {
@@ -73,10 +79,13 @@ class StreamProcessor:
 
     def detect_anomalies(self, event: dict):
         """
-        Detect abnormal conditions in a processed event.
+        Detect abnormal conditions in a processed event
+        and persist the resulting alerts in RocksDB.
         """
 
-        detected_alerts = self.anomaly_detector.detect(event)
+        detected_alerts = self.anomaly_detector.detect(
+            event
+        )
 
         if not detected_alerts:
             return
@@ -87,6 +96,12 @@ class StreamProcessor:
             # Keep only the latest 50 alerts
             if len(self.alerts) > 50:
                 self.alerts.pop(0)
+
+            # Persist alerts in RocksDB
+            self.state_store.save(
+                "alerts",
+                self.alerts
+            )
 
             print()
             print("!" * 60)
@@ -104,7 +119,11 @@ class StreamProcessor:
     def get_alerts(self):
         """
         Return recently detected alerts.
+
+        Alerts are loaded from the in-memory copy that
+        was restored from RocksDB during initialization.
         """
+
         return list(reversed(self.alerts))
 
     def add_to_window(self, event: dict):
@@ -146,8 +165,14 @@ class StreamProcessor:
         print("REAL-TIME ANALYTICS")
         print("=" * 60)
         print(f"Total Events: {metrics['total_events']}")
-        print(f"Events / Sec: {metrics['events_per_second']}")
-        print(f"Active Trucks: {metrics['active_trucks']}")
+        print(
+            f"Events / Sec: "
+            f"{metrics['events_per_second']}"
+        )
+        print(
+            f"Active Trucks: "
+            f"{metrics['active_trucks']}"
+        )
         print(
             f"Average Temperature: "
             f"{metrics['average_temperature_c']}°C"
@@ -160,7 +185,10 @@ class StreamProcessor:
             f"Average Fuel: "
             f"{metrics['average_fuel_level_percent']}%"
         )
-        print(f"Active Alerts: {len(self.alerts)}")
+        print(
+            f"Active Alerts: "
+            f"{len(self.alerts)}"
+        )
         print("=" * 60)
         print()
 
@@ -185,7 +213,10 @@ class StreamProcessor:
         print("=" * 60)
         print(f"Kafka: {KAFKA_BOOTSTRAP_SERVERS}")
         print(f"Topic: {EVENTS_TOPIC}")
-        print("Consumer group: streamforge-processor")
+        print(
+            "Consumer group: "
+            "streamforge-processor"
+        )
         print(
             "Pipeline: "
             "Consume → Filter → Map → "
@@ -203,7 +234,9 @@ class StreamProcessor:
                     continue
 
                 if message.error():
-                    raise KafkaException(message.error())
+                    raise KafkaException(
+                        message.error()
+                    )
 
                 try:
                     event = json.loads(
@@ -224,10 +257,14 @@ class StreamProcessor:
                     if processed_event is not None:
                         print(
                             f"Processed | "
-                            f"truck={processed_event['truck_id']} | "
-                            f"temp={processed_event['temperature_c']:.2f}°C | "
-                            f"speed={processed_event['speed_kmh']:.2f} km/h | "
-                            f"fuel={processed_event['fuel_level_percent']:.2f}%"
+                            f"truck="
+                            f"{processed_event['truck_id']} | "
+                            f"temp="
+                            f"{processed_event['temperature_c']:.2f}°C | "
+                            f"speed="
+                            f"{processed_event['speed_kmh']:.2f} km/h | "
+                            f"fuel="
+                            f"{processed_event['fuel_level_percent']:.2f}%"
                         )
 
                         # Detect anomalies
@@ -248,17 +285,23 @@ class StreamProcessor:
                         print("-" * 60)
 
                 except json.JSONDecodeError:
-                    print("Invalid JSON event received")
+                    print(
+                        "Invalid JSON event received"
+                    )
 
         except KeyboardInterrupt:
-            print("\nStopping Stream Processor...")
+            print(
+                "\nStopping Stream Processor..."
+            )
 
         finally:
             self.print_metrics()
             self.flush_windows()
             self.consumer.close()
             self.state_store.close()
-            print("Stream Processor stopped.")
+            print(
+                "Stream Processor stopped."
+            )
 
 
 if __name__ == "__main__":
