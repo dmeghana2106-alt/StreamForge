@@ -9,26 +9,15 @@ class FiveMinuteWindow:
     Each truck gets its own five-minute window.
 
     Active window state is stored in RocksDB when a state
-    store is provided.
-
-    Completed window results are kept in memory so that
-    FastAPI can expose them through an API endpoint.
+    store is provided, allowing the window to be restored
+    after a processor restart.
     """
 
     WINDOW_SIZE = timedelta(minutes=5)
 
     def __init__(self, state_store=None):
         self.state_store = state_store
-
-        self.windows = defaultdict(
-            self._create_window
-        )
-
-        # Store completed five-minute window results
-        self.completed_windows = []
-
-        # Keep only the latest 20 completed windows
-        self.max_completed_windows = 20
+        self.windows = defaultdict(self._create_window)
 
         self._restore_windows()
 
@@ -50,7 +39,6 @@ class FiveMinuteWindow:
             return
 
         for key in self.state_store.keys():
-
             if not key.startswith("window:"):
                 continue
 
@@ -60,9 +48,7 @@ class FiveMinuteWindow:
                 1,
             )
 
-            saved_window = self.state_store.get(
-                key
-            )
+            saved_window = self.state_store.get(key)
 
             if saved_window is None:
                 continue
@@ -73,7 +59,6 @@ class FiveMinuteWindow:
         self,
         timestamp: datetime,
     ) -> datetime:
-
         minute = (
             timestamp.minute // 5
         ) * 5
@@ -89,8 +74,7 @@ class FiveMinuteWindow:
         truck_id: str,
     ):
         """
-        Save the current active window state
-        to RocksDB.
+        Save the current window state to RocksDB.
         """
 
         if self.state_store is None:
@@ -99,18 +83,10 @@ class FiveMinuteWindow:
         window = self.windows[truck_id]
 
         saved_window = {
-            "window_start": window[
-                "window_start"
-            ],
-            "window_end": window[
-                "window_end"
-            ],
-            "event_count": window[
-                "event_count"
-            ],
-            "temperature_sum": window[
-                "temperature_sum"
-            ],
+            "window_start": window["window_start"],
+            "window_end": window["window_end"],
+            "event_count": window["event_count"],
+            "temperature_sum": window["temperature_sum"],
         }
 
         self.state_store.save(
@@ -123,7 +99,7 @@ class FiveMinuteWindow:
         truck_id: str,
     ):
         """
-        Delete a completed window from RocksDB.
+        Delete a truck's completed window from RocksDB.
         """
 
         if self.state_store is None:
@@ -133,25 +109,6 @@ class FiveMinuteWindow:
             f"window:{truck_id}"
         )
 
-    def _store_completed_window(
-        self,
-        result: dict,
-    ):
-        """
-        Store a completed window result in memory.
-        """
-
-        self.completed_windows.append(
-            result
-        )
-
-        # Keep only latest 20 results
-        if (
-            len(self.completed_windows)
-            > self.max_completed_windows
-        ):
-            self.completed_windows.pop(0)
-
     def add_event(
         self,
         truck_id: str,
@@ -159,31 +116,24 @@ class FiveMinuteWindow:
         temperature: float,
     ):
         """
-        Add an event to the truck's current
-        five-minute window.
+        Add an event to the truck's current five-minute window.
 
-        If the event belongs to a new window,
-        the previous window result is completed,
-        stored, and returned.
+        If the event belongs to a new window, the previous
+        window result is returned.
         """
 
-        window_start = (
-            self._get_window_start(
-                timestamp
-            )
+        window_start = self._get_window_start(
+            timestamp
         )
 
         window_end = (
-            window_start
-            + self.WINDOW_SIZE
+            window_start +
+            self.WINDOW_SIZE
         )
 
         window = self.windows[truck_id]
 
-        # ----------------------------------
         # First event for this truck
-        # ----------------------------------
-
         if window["window_start"] is None:
 
             window["window_start"] = (
@@ -205,16 +155,11 @@ class FiveMinuteWindow:
 
             return None
 
-        current_window_end = (
-            datetime.fromisoformat(
-                window["window_end"]
-            )
+        current_window_end = datetime.fromisoformat(
+            window["window_end"]
         )
 
-        # ----------------------------------
-        # New five-minute window
-        # ----------------------------------
-
+        # Event belongs to a new five-minute window
         if timestamp >= current_window_end:
 
             result = self._build_result(
@@ -222,12 +167,7 @@ class FiveMinuteWindow:
                 window,
             )
 
-            # Store completed window
-            self._store_completed_window(
-                result
-            )
-
-            # Start new window
+            # Start the new window
             window["window_start"] = (
                 window_start.isoformat()
             )
@@ -237,7 +177,6 @@ class FiveMinuteWindow:
             )
 
             window["event_count"] = 0
-
             window["temperature_sum"] = 0.0
 
             self._add_temperature(
@@ -251,10 +190,7 @@ class FiveMinuteWindow:
 
             return result
 
-        # ----------------------------------
         # Event belongs to current window
-        # ----------------------------------
-
         self._add_temperature(
             window,
             temperature,
@@ -266,77 +202,10 @@ class FiveMinuteWindow:
 
         return None
 
-    def get_active_windows(self):
-        """
-        Return currently active windows.
-        """
-
-        results = []
-
-        for truck_id, window in (
-            self.windows.items()
-        ):
-
-            if window["window_start"] is None:
-                continue
-
-            results.append(
-                {
-                    "truck_id": truck_id,
-                    "window_start": (
-                        window[
-                            "window_start"
-                        ]
-                    ),
-                    "window_end": (
-                        window[
-                            "window_end"
-                        ]
-                    ),
-                    "event_count": (
-                        window[
-                            "event_count"
-                        ]
-                    ),
-                    "average_temperature_c": (
-                        round(
-                            window[
-                                "temperature_sum"
-                            ]
-                            / window[
-                                "event_count"
-                            ],
-                            2,
-                        )
-                        if window[
-                            "event_count"
-                        ] > 0
-                        else 0.0
-                    ),
-                }
-            )
-
-        return results
-
-    def get_completed_windows(
-        self,
-    ):
-        """
-        Return recently completed
-        five-minute windows.
-        """
-
-        return list(
-            reversed(
-                self.completed_windows
-            )
-        )
-
     def flush(self):
         """
-        Return all active window results.
-
-        Used when the processor stops.
+        Return all active window results and clear
+        their persistent state.
         """
 
         results = []
@@ -350,10 +219,6 @@ class FiveMinuteWindow:
                 result = self._build_result(
                     truck_id,
                     window,
-                )
-
-                self._store_completed_window(
-                    result
                 )
 
                 results.append(result)
@@ -372,10 +237,7 @@ class FiveMinuteWindow:
         temperature,
     ):
         window["event_count"] += 1
-
-        window["temperature_sum"] += (
-            temperature
-        )
+        window["temperature_sum"] += temperature
 
     @staticmethod
     def _build_result(
