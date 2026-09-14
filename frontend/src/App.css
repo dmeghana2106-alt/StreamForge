@@ -1,1167 +1,2614 @@
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
-  background: #060b16;
-  color: #f5f7ff;
-}
-
-button {
-  font-family: inherit;
-}
-
-.app-shell {
-  min-height: 100vh;
-  display: flex;
-  background:
-    radial-gradient(circle at 70% 0%, rgba(80, 50, 160, 0.08), transparent 30%),
-    #060b16;
-}
-
-/* ================= SIDEBAR ================= */
-
-.sidebar {
-  width: 274px;
-  min-height: 100vh;
-  position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  padding: 22px 20px;
-  background: #080e1c;
-  border-right: 1px solid #1b263b;
-  display: flex;
-  flex-direction: column;
-  z-index: 10;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 2px 10px 28px;
-  border-bottom: 1px solid #182337;
-}
-
-.brand-icon {
-  width: 43px;
-  height: 52px;
-  display: grid;
-  place-items: center;
-  color: white;
-  font-size: 38px;
-  font-weight: 900;
-  font-style: italic;
-  background: linear-gradient(145deg, #743cff, #2563eb);
-  clip-path: polygon(50% 0, 100% 0, 68% 42%, 100% 42%, 35% 100%, 48% 55%, 15% 55%);
-}
-
-.brand h1 {
-  margin: 0;
-  font-size: 17px;
-  letter-spacing: 1.4px;
-}
-
-.brand h1 span {
-  color: #3695ff;
-}
-
-.brand p {
-  margin: 5px 0 0;
-  color: #6f7c93;
-  font-size: 9px;
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 24px;
-}
-
-.nav-item {
-  border: 0;
-  background: transparent;
-  color: #9ca8bb;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  width: 100%;
-  padding: 12px 15px;
-  border-radius: 9px;
-  font-size: 14px;
-  text-align: left;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.nav-item:hover {
-  color: white;
-  background: #121c30;
-}
-
-.nav-item.active {
-  color: white;
-  background: linear-gradient(90deg, #5322b9, #41209b);
-  box-shadow: 0 8px 25px rgba(92, 42, 210, 0.22);
-}
-
-.nav-icon {
-  width: 20px;
-  text-align: center;
-  font-size: 19px;
-}
-
-.cluster-card {
-  margin-top: auto;
-  padding: 16px;
-  background: #0c1424;
-  border: 1px solid #1c2a42;
-  border-radius: 10px;
-}
-
-.cluster-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.healthy-badge {
-  background: rgba(0, 210, 125, 0.14);
-  color: #00dc8a;
-  padding: 5px 9px;
-  border-radius: 6px;
-  font-size: 10px;
-}
-
-.cluster-row {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 12px;
-  color: #77849b;
-  font-size: 11px;
-}
-
-.cluster-row strong {
-  color: #00df91;
-  font-weight: 600;
-}
-
-.cluster-row:nth-child(n + 3) strong {
-  color: #d8dfed;
-}
-
-.dark-mode {
-  margin-top: 18px;
-  padding: 13px 14px;
-  border: 1px solid #1b2940;
-  border-radius: 9px;
-  color: #aab5c8;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 12px;
-}
-
-.toggle {
-  width: 39px;
-  height: 22px;
-  border-radius: 20px;
-  background: #6b35e9;
-  padding: 3px;
-}
-
-.toggle-dot {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: white;
-  margin-left: auto;
-}
-
-/* ================= MAIN ================= */
-
-.main-content {
-  margin-left: 274px;
-  width: calc(100% - 274px);
-  min-height: 100vh;
-}
-
-.topbar {
-  height: 62px;
-  border-bottom: 1px solid #172338;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 30px;
-  background: rgba(7, 12, 25, 0.9);
-}
-
-.menu-button {
-  background: transparent;
-  border: 0;
-  color: #a5b1c5;
-  font-size: 22px;
-  cursor: pointer;
-}
-
-.topbar-right {
-  display: flex;
-  align-items: center;
-  gap: 23px;
-}
-
-.system-status {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 12px;
-  color: #cbd3e1;
-}
-
-.status-dot,
-.live-dot {
-  width: 8px;
-  height: 8px;
-  background: #00dc8a;
-  border-radius: 50%;
-  box-shadow: 0 0 10px rgba(0, 220, 138, 0.8);
-}
-
-.top-icon {
-  color: #aeb9cc;
-  font-size: 23px;
-  position: relative;
-}
-
-.notification span {
-  position: absolute;
-  top: -8px;
-  right: -10px;
-  width: 17px;
-  height: 17px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: #ef4444;
-  color: white;
-  font-size: 9px;
-}
-
-.profile {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #8995aa;
-}
-
-.profile-circle {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: #18233a;
-  border: 1px solid #33415b;
-  color: #d8deeb;
-  font-size: 11px;
-}
-
-.content {
-  padding: 28px 30px 40px;
-}
-
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 24px;
-}
-
-.page-header h2 {
-  margin: 0;
-  font-size: 29px;
-  letter-spacing: -0.8px;
-}
-
-.page-header p {
-  margin: 7px 0 0;
-  color: #718097;
-  font-size: 13px;
-}
-
-.header-actions {
-  display: flex;
-  gap: 13px;
-}
-
-.time-select,
-.refresh-button {
-  height: 39px;
-  border: 1px solid #25334b;
-  background: #0b1323;
-  color: #d2d9e5;
-  border-radius: 7px;
-  padding: 0 14px;
-  display: flex;
-  align-items: center;
-  font-size: 11px;
-}
-
-.refresh-button {
-  border: 0;
-  background: linear-gradient(100deg, #642bd1, #7a38e7);
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 7px 22px rgba(103, 47, 220, 0.24);
-}
-
-.refresh-button:hover {
-  transform: translateY(-1px);
-}
-
-/* ================= STATS ================= */
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 13px;
-  margin-bottom: 15px;
-}
-
-.stat-card {
-  min-height: 126px;
-  border: 1px solid #1d2b43;
-  border-radius: 10px;
-  background: #0b1322;
-  padding: 17px;
-  display: flex;
-  gap: 12px;
-}
-
-.stat-icon {
-  width: 46px;
-  height: 46px;
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-.purple-icon {
-  color: #c5a3ff;
-  background: rgba(123, 63, 237, 0.28);
-}
-
-.blue-icon {
-  color: #66a9ff;
-  background: rgba(24, 105, 220, 0.28);
-}
-
-.green-icon {
-  color: #45e5a4;
-  background: rgba(0, 190, 110, 0.2);
-}
-
-.yellow-icon {
-  color: #ffc95c;
-  background: rgba(240, 170, 25, 0.2);
-}
-
-.red-icon {
-  color: #ff6f78;
-  background: rgba(239, 68, 68, 0.2);
-}
-
-.stat-info p {
-  margin: 1px 0 5px;
-  color: #8290a7;
-  font-size: 11px;
-}
-
-.stat-info h3 {
-  margin: 0;
-  font-size: 24px;
-  letter-spacing: -0.5px;
-}
-
-.stat-info span {
-  display: inline-block;
-  margin-top: 8px;
-  font-size: 10px;
-}
-
-.stat-info small {
-  display: block;
-  margin-top: 3px;
-  color: #69778e;
-  font-size: 9px;
-}
-
-.positive {
-  color: #00dc8a;
-}
-
-/* ================= PANELS ================= */
-
-.panel {
-  background: #0a1221;
-  border: 1px solid #1b2a42;
-  border-radius: 10px;
-  padding: 18px;
-  min-width: 0;
-}
-
-.panel-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.panel-title h3 {
-  margin: 0;
-  font-size: 14px;
-}
-
-.panel-title p {
-  margin: 5px 0 0;
-  color: #68778f;
-  font-size: 10px;
-}
-
-.charts-grid {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: 15px;
-  margin-bottom: 15px;
-}
-
-.live-control {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 7px 10px;
-  background: #101a2c;
-  border: 1px solid #23334d;
-  border-radius: 6px;
-  color: #bfc8d7;
-  font-size: 9px;
-}
-
-.live-control span:last-child {
-  color: #738199;
-  margin-left: 5px;
-}
-
-.line-chart {
-  height: 220px;
-  display: flex;
-  margin-top: 18px;
-}
-
-.y-labels {
-  width: 36px;
-  height: 190px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  color: #52617a;
-  font-size: 9px;
-}
-
-.chart-area {
-  position: relative;
-  flex: 1;
-  height: 190px;
-  overflow: hidden;
-}
-
-.grid-line {
-  position: absolute;
-  width: 100%;
-  border-top: 1px dashed #1c2a40;
-}
-
-.line-1 {
-  top: 0;
-}
-
-.line-2 {
-  top: 25%;
-}
-
-.line-3 {
-  top: 50%;
-}
-
-.line-4 {
-  top: 75%;
-}
-
-.chart-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.chart-times {
-  display: flex;
-  justify-content: space-between;
-  margin-left: 36px;
-  margin-top: -34px;
-  color: #52617a;
-  font-size: 8px;
-}
-
-.time-select.small {
-  height: 29px;
-  font-size: 9px;
-}
-
-/* ================= THROUGHPUT ================= */
-
-.throughput-chart {
-  height: 220px;
-  margin-top: 15px;
-  position: relative;
-  border-bottom: 1px solid #1a2940;
-}
-
-.throughput-number {
-  position: absolute;
-  top: 10px;
-  left: 4px;
-  font-size: 25px;
-  font-weight: 700;
-}
-
-.mini-bars {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 145px;
-  display: flex;
-  align-items: flex-end;
-  gap: 7px;
-}
-
-.mini-bar {
-  flex: 1;
-  min-width: 5px;
-  border-radius: 3px 3px 0 0;
-  background: linear-gradient(to top, #196edc, #39a3ff);
-  opacity: 0.85;
-}
-
-.throughput-footer {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 11px;
-  color: #65738b;
-  font-size: 9px;
-}
-
-/* ================= MIDDLE ================= */
-
-.middle-grid {
-  display: grid;
-  grid-template-columns: 0.75fr 1.7fr;
-  gap: 15px;
-  margin-bottom: 15px;
-}
-
-.view-link {
-  color: #8d62e8;
-  font-size: 10px;
-  cursor: pointer;
-}
-
-.topic-list {
-  margin-top: 22px;
-}
-
-.topic-item {
-  margin-bottom: 18px;
-}
-
-.topic-name {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #aeb8c9;
-  font-size: 10px;
-  margin-bottom: 8px;
-}
-
-.topic-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-}
-
-.topic-dot.purple {
-  background: #9b5cff;
-}
-
-.topic-dot.blue {
-  background: #3194ff;
-}
-
-.topic-dot.green {
-  background: #00cf8a;
-}
-
-.topic-dot.yellow {
-  background: #f5b82e;
-}
-
-.topic-dot.red {
-  background: #ef5361;
-}
-
-.topic-value {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
-
-.topic-bar {
-  height: 5px;
-  flex: 1;
-  background: #172337;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.topic-bar-fill {
-  height: 100%;
-  border-radius: 10px;
-}
-
-.topic-bar-fill.purple {
-  background: #9456ed;
-}
-
-.topic-bar-fill.blue {
-  background: #258cf0;
-}
-
-.topic-bar-fill.green {
-  background: #00ca83;
-}
-
-.topic-bar-fill.yellow {
-  background: #efb529;
-}
-
-.topic-bar-fill.red {
-  background: #eb4c5b;
-}
-
-.topic-value strong {
-  width: 28px;
-  color: #c5ccda;
-  font-size: 10px;
-  text-align: right;
-}
-
-.empty-state {
-  color: #66758e;
-  text-align: center;
-  padding: 55px 0;
-  font-size: 11px;
-}
-
-/* ================= EVENTS ================= */
-
-.pause-button {
-  border: 1px solid #293950;
-  background: #101a2b;
-  color: #d5dbe6;
-  border-radius: 6px;
-  padding: 7px 11px;
-  font-size: 9px;
-  cursor: pointer;
-}
-
-.table-container {
-  overflow-x: auto;
-  margin-top: 18px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th {
-  color: #596880;
-  font-size: 8px;
-  font-weight: 600;
-  text-align: left;
-  padding: 10px 8px;
-  border-bottom: 1px solid #1c2a40;
-}
-
-td {
-  color: #aeb8c9;
-  font-size: 10px;
-  padding: 12px 8px;
-  border-bottom: 1px solid #131f33;
-  white-space: nowrap;
-}
-
-.topic-text {
-  color: #a66eff;
-}
-
-.status-success {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: #00d98a;
-  background: rgba(0, 217, 138, 0.10);
-  border: 1px solid rgba(0, 217, 138, 0.20);
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.2px;
-  transition: all 0.2s ease;
-}
-
-.status-success:hover {
-  background: rgba(0, 217, 138, 0.16);
-  transform: translateY(-1px);
-}
-
-.loading-row {
-  text-align: center;
-  color: #68778e;
-  padding: 30px;
-}
-
-/* ================= BOTTOM ================= */
-
-.bottom-grid {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: 15px;
-}
-
-.pipeline {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 5px;
-  margin-top: 25px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-}
-
-.pipeline-node {
-  min-width: 82px;
-  text-align: center;
-}
-
-.pipeline-icon {
-  width: 46px;
-  height: 46px;
-  margin: 0 auto 9px;
-  display: grid;
-  place-items: center;
-  border: 1px solid #6f42c6;
-  border-radius: 8px;
-  background: #12152a;
-  color: #a66cff;
-  font-size: 20px;
-}
-
-.pipeline-node strong {
-  display: block;
-  color: #c0c8d7;
-  font-size: 9px;
-  white-space: nowrap;
-}
-
-.pipeline-node span {
-  display: block;
-  margin-top: 6px;
-  color: #00d989;
-  font-size: 8px;
-}
-
-.pipeline-node i {
-  display: inline-block;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #00dc8a;
-  margin-right: 3px;
-}
-
-.pipeline-arrow {
-  color: #4d9cff;
-  font-size: 18px;
-  margin-top: 14px;
-}
-
-.alert-list {
-  margin-top: 17px;
-}
-
-.alert {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 10px 0;
-  border-bottom: 1px solid #172337;
-}
-
-.alert:last-child {
-  border-bottom: 0;
-}
-
-.alert-icon {
-  width: 21px;
-  height: 21px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  font-size: 11px;
-}
-
-.success-alert {
-  background: rgba(0, 220, 138, 0.15);
-  color: #00dc8a;
-}
-
-.warning-alert {
-  background: rgba(240, 170, 25, 0.15);
-  color: #f5b82e;
-}
-
-.error-alert {
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef5963;
-}
-
-.alert div {
-  flex: 1;
-}
-
-.alert strong {
-  display: block;
-  color: #b7c1d0;
-  font-size: 9px;
-  font-weight: 500;
-}
-
-.alert small {
-  display: block;
-  color: #596880;
-  margin-top: 3px;
-  font-size: 8px;
-}
-
-.alert-label {
-  padding: 4px 7px;
-  border-radius: 4px;
-  font-size: 7px;
-}
-
-.alert-label.info {
-  background: rgba(34, 126, 239, 0.18);
-  color: #4e9eff;
-}
-
-.alert-label.warning {
-  background: rgba(239, 171, 35, 0.15);
-  color: #e9ad2e;
-}
-
-.alert-label.error {
-  background: rgba(0, 210, 130, 0.12);
-  color: #00d88a;
-}
-
-/* ================= FOOTER ================= */
-
-.footer {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-  color: #46546b;
-  font-size: 9px;
-}
-
-/* ================= RESPONSIVE ================= */
-
-@media (max-width: 1250px) {
-  .stats-grid {
-    grid-template-columns: repeat(3, 1fr);
+  * {
+    box-sizing: border-box;
   }
 
-  .charts-grid,
-  .middle-grid,
-  .bottom-grid {
-    grid-template-columns: 1fr;
+  body {
+    margin: 0;
+    font-family:
+      Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", sans-serif;
+    background: #060b16;
+    color: #f5f7ff;
   }
-}
 
-@media (max-width: 850px) {
+  button {
+    font-family: inherit;
+  }
+
+  .app-shell {
+    min-height: 100vh;
+    display: flex;
+    background:
+      radial-gradient(circle at 70% 0%, rgba(80, 50, 160, 0.08), transparent 30%),
+      #060b16;
+  }
+
+  /* ================= SIDEBAR ================= */
+
   .sidebar {
-    width: 220px;
-  }
-
-  .main-content {
-    margin-left: 220px;
-    width: calc(100% - 220px);
-  }
-
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .page-header {
+    width: 274px;
+    min-height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    padding: 22px 20px;
+    background: #080e1c;
+    border-right: 1px solid #1b263b;
+    display: flex;
     flex-direction: column;
-    gap: 18px;
+    z-index: 10;
   }
-}
 
-@media (max-width: 600px) {
-  .sidebar {
-    display: none;
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 2px 10px 28px;
+    border-bottom: 1px solid #182337;
   }
+
+  .brand-icon {
+    width: 43px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    color: white;
+    font-size: 38px;
+    font-weight: 900;
+    font-style: italic;
+    background: linear-gradient(145deg, #743cff, #2563eb);
+    clip-path: polygon(50% 0, 100% 0, 68% 42%, 100% 42%, 35% 100%, 48% 55%, 15% 55%);
+  }
+
+  .brand h1 {
+    margin: 0;
+    font-size: 17px;
+    letter-spacing: 1.4px;
+  }
+
+  .brand h1 span {
+    color: #3695ff;
+  }
+
+  .brand p {
+    margin: 5px 0 0;
+    color: #6f7c93;
+    font-size: 9px;
+  }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 24px;
+  }
+
+  .nav-item {
+    border: 0;
+    background: transparent;
+    color: #9ca8bb;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 9px;
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+
+  .nav-item:hover {
+    color: white;
+    background: #121c30;
+  }
+
+  .nav-item.active {
+    color: white;
+    background: linear-gradient(90deg, #5322b9, #41209b);
+    box-shadow: 0 8px 25px rgba(92, 42, 210, 0.22);
+  }
+
+  .nav-icon {
+    width: 20px;
+    text-align: center;
+    font-size: 19px;
+  }
+
+  .cluster-card {
+    margin-top: auto;
+    padding: 16px;
+    background: #0c1424;
+    border: 1px solid #1c2a42;
+    border-radius: 10px;
+  }
+
+  .cluster-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .healthy-badge {
+    background: rgba(0, 210, 125, 0.14);
+    color: #00dc8a;
+    padding: 5px 9px;
+    border-radius: 6px;
+    font-size: 10px;
+  }
+
+  .cluster-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    color: #77849b;
+    font-size: 11px;
+  }
+
+  .cluster-row strong {
+    color: #00df91;
+    font-weight: 600;
+  }
+
+  .cluster-row:nth-child(n + 3) strong {
+    color: #d8dfed;
+  }
+
+  .dark-mode {
+    margin-top: 18px;
+    padding: 13px 14px;
+    border: 1px solid #1b2940;
+    border-radius: 9px;
+    color: #aab5c8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+  }
+
+  .toggle {
+    width: 39px;
+    height: 22px;
+    border-radius: 20px;
+    background: #6b35e9;
+    padding: 3px;
+  }
+
+  .toggle-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: white;
+    margin-left: auto;
+  }
+
+  /* ================= MAIN ================= */
 
   .main-content {
-    margin-left: 0;
-    width: 100%;
-  }
-
-  .content {
-    padding: 20px 15px;
-  }
-
-  .stats-grid {
-    grid-template-columns: 1fr;
+    margin-left: 274px;
+    width: calc(100% - 274px);
+    min-height: 100vh;
   }
 
   .topbar {
-    padding: 0 15px;
+    height: 62px;
+    border-bottom: 1px solid #172338;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    background: rgba(7, 12, 25, 0.9);
+  }
+
+  .menu-button {
+    background: transparent;
+    border: 0;
+    color: #a5b1c5;
+    font-size: 22px;
+    cursor: pointer;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 23px;
   }
 
   .system-status {
-    display: none;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: #cbd3e1;
+  }
+
+  .status-dot,
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    background: #00dc8a;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 220, 138, 0.8);
+  }
+
+  .top-icon {
+    color: #aeb9cc;
+    font-size: 23px;
+    position: relative;
+  }
+
+  .notification span {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    width: 17px;
+    height: 17px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #ef4444;
+    color: white;
+    font-size: 9px;
+  }
+
+  .profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #8995aa;
+  }
+
+  .profile-circle {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #18233a;
+    border: 1px solid #33415b;
+    color: #d8deeb;
+    font-size: 11px;
+  }
+
+  .content {
+    padding: 28px 30px 40px;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+  }
+
+  .page-header h2 {
+    margin: 0;
+    font-size: 29px;
+    letter-spacing: -0.8px;
+  }
+
+  .page-header p {
+    margin: 7px 0 0;
+    color: #718097;
+    font-size: 13px;
   }
 
   .header-actions {
-    width: 100%;
+    display: flex;
+    gap: 13px;
   }
 
   .time-select,
   .refresh-button {
-    flex: 1;
-    justify-content: center;
+    height: 39px;
+    border: 1px solid #25334b;
+    background: #0b1323;
+    color: #d2d9e5;
+    border-radius: 7px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    font-size: 11px;
   }
+
+  .refresh-button {
+    border: 0;
+    background: linear-gradient(100deg, #642bd1, #7a38e7);
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 7px 22px rgba(103, 47, 220, 0.24);
+  }
+
+  .refresh-button:hover {
+    transform: translateY(-1px);
+  }
+
+  /* ================= STATS ================= */
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 13px;
+    margin-bottom: 15px;
+  }
+
+  .stat-card {
+    min-height: 126px;
+    border: 1px solid #1d2b43;
+    border-radius: 10px;
+    background: #0b1322;
+    padding: 17px;
+    display: flex;
+    gap: 12px;
+  }
+
+  .stat-icon {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-size: 22px;
+    font-weight: bold;
+  }
+
+  .purple-icon {
+    color: #c5a3ff;
+    background: rgba(123, 63, 237, 0.28);
+  }
+
+  .blue-icon {
+    color: #66a9ff;
+    background: rgba(24, 105, 220, 0.28);
+  }
+
+  .green-icon {
+    color: #45e5a4;
+    background: rgba(0, 190, 110, 0.2);
+  }
+
+  .yellow-icon {
+    color: #ffc95c;
+    background: rgba(240, 170, 25, 0.2);
+  }
+
+  .red-icon {
+    color: #ff6f78;
+    background: rgba(239, 68, 68, 0.2);
+  }
+
+  .stat-info p {
+    margin: 1px 0 5px;
+    color: #8290a7;
+    font-size: 11px;
+  }
+
+  .stat-info h3 {
+    margin: 0;
+    font-size: 24px;
+    letter-spacing: -0.5px;
+  }
+
+  .stat-info span {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 10px;
+  }
+
+  .stat-info small {
+    display: block;
+    margin-top: 3px;
+    color: #69778e;
+    font-size: 9px;
+  }
+
+  .positive {
+    color: #00dc8a;
+  }
+
+  /* ================= PANELS ================= */
+
+  .panel {
+    background: #0a1221;
+    border: 1px solid #1b2a42;
+    border-radius: 10px;
+    padding: 18px;
+    min-width: 0;
+  }
+
+  .panel-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .panel-title h3 {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .panel-title p {
+    margin: 5px 0 0;
+    color: #68778f;
+    font-size: 10px;
+  }
+
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+
+  .live-control {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 10px;
+    background: #101a2c;
+    border: 1px solid #23334d;
+    border-radius: 6px;
+    color: #bfc8d7;
+    font-size: 9px;
+  }
+
+  .live-control span:last-child {
+    color: #738199;
+    margin-left: 5px;
+  }
+
+  .line-chart {
+    height: 220px;
+    display: flex;
+    margin-top: 18px;
+  }
+
+  .y-labels {
+    width: 36px;
+    height: 190px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #52617a;
+    font-size: 9px;
+  }
+
+  .chart-area {
+    position: relative;
+    flex: 1;
+    height: 190px;
+    overflow: hidden;
+  }
+
+  .grid-line {
+    position: absolute;
+    width: 100%;
+    border-top: 1px dashed #1c2a40;
+  }
+
+  .line-1 {
+    top: 0;
+  }
+
+  .line-2 {
+    top: 25%;
+  }
+
+  .line-3 {
+    top: 50%;
+  }
+
+  .line-4 {
+    top: 75%;
+  }
+
+  .chart-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .chart-times {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 36px;
+    margin-top: -34px;
+    color: #52617a;
+    font-size: 8px;
+  }
+
+  .time-select.small {
+    height: 29px;
+    font-size: 9px;
+  }
+
+  /* ================= THROUGHPUT ================= */
+
+  .throughput-chart {
+    height: 220px;
+    margin-top: 15px;
+    position: relative;
+    border-bottom: 1px solid #1a2940;
+  }
+
+  .throughput-number {
+    position: absolute;
+    top: 10px;
+    left: 4px;
+    font-size: 25px;
+    font-weight: 700;
+  }
+
+  .mini-bars {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 145px;
+    display: flex;
+    align-items: flex-end;
+    gap: 7px;
+  }
+
+  .mini-bar {
+    flex: 1;
+    min-width: 5px;
+    border-radius: 3px 3px 0 0;
+    background: linear-gradient(to top, #196edc, #39a3ff);
+    opacity: 0.85;
+  }
+
+  .throughput-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 11px;
+    color: #65738b;
+    font-size: 9px;
+  }
+
+  /* ================= MIDDLE ================= */
+
+  .middle-grid {
+    display: grid;
+    grid-template-columns: 0.75fr 1.7fr;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+
+  .view-link {
+    color: #8d62e8;
+    font-size: 10px;
+    cursor: pointer;
+  }
+
+  .topic-list {
+    margin-top: 22px;
+  }
+
+  .topic-item {
+    margin-bottom: 18px;
+  }
+
+  .topic-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #aeb8c9;
+    font-size: 10px;
+    margin-bottom: 8px;
+  }
+
+  .topic-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+  }
+
+  .topic-dot.purple {
+    background: #9b5cff;
+  }
+
+  .topic-dot.blue {
+    background: #3194ff;
+  }
+
+  .topic-dot.green {
+    background: #00cf8a;
+  }
+
+  .topic-dot.yellow {
+    background: #f5b82e;
+  }
+
+  .topic-dot.red {
+    background: #ef5361;
+  }
+
+  .topic-value {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .topic-bar {
+    height: 5px;
+    flex: 1;
+    background: #172337;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .topic-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+  }
+
+  .topic-bar-fill.purple {
+    background: #9456ed;
+  }
+
+  .topic-bar-fill.blue {
+    background: #258cf0;
+  }
+
+  .topic-bar-fill.green {
+    background: #00ca83;
+  }
+
+  .topic-bar-fill.yellow {
+    background: #efb529;
+  }
+
+  .topic-bar-fill.red {
+    background: #eb4c5b;
+  }
+
+  .topic-value strong {
+    width: 28px;
+    color: #c5ccda;
+    font-size: 10px;
+    text-align: right;
+  }
+
+  .empty-state {
+    color: #66758e;
+    text-align: center;
+    padding: 55px 0;
+    font-size: 11px;
+  }
+
+  /* ================= EVENTS ================= */
+
+  .pause-button {
+    border: 1px solid #293950;
+    background: #101a2b;
+    color: #d5dbe6;
+    border-radius: 6px;
+    padding: 7px 11px;
+    font-size: 9px;
+    cursor: pointer;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    margin-top: 18px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    color: #596880;
+    font-size: 8px;
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 8px;
+    border-bottom: 1px solid #1c2a40;
+  }
+
+  td {
+    color: #aeb8c9;
+    font-size: 10px;
+    padding: 12px 8px;
+    border-bottom: 1px solid #131f33;
+    white-space: nowrap;
+  }
+
+  .topic-text {
+    color: #a66eff;
+  }
+
+  .status-success {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #00d98a;
+    background: rgba(0, 217, 138, 0.10);
+    border: 1px solid rgba(0, 217, 138, 0.20);
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    transition: all 0.2s ease;
+  }
+
+  .status-success:hover {
+    background: rgba(0, 217, 138, 0.16);
+    transform: translateY(-1px);
+  }
+
+  .loading-row {
+    text-align: center;
+    color: #68778e;
+    padding: 30px;
+  }
+
+  /* ================= BOTTOM ================= */
+
+  .bottom-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 15px;
+  }
+
+  .pipeline {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 5px;
+    margin-top: 25px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .pipeline-node {
+    min-width: 82px;
+    text-align: center;
+  }
+
+  .pipeline-icon {
+    width: 46px;
+    height: 46px;
+    margin: 0 auto 9px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #6f42c6;
+    border-radius: 8px;
+    background: #12152a;
+    color: #a66cff;
+    font-size: 20px;
+  }
+
+  .pipeline-node strong {
+    display: block;
+    color: #c0c8d7;
+    font-size: 9px;
+    white-space: nowrap;
+  }
+
+  .pipeline-node span {
+    display: block;
+    margin-top: 6px;
+    color: #00d989;
+    font-size: 8px;
+  }
+
+  .pipeline-node i {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #00dc8a;
+    margin-right: 3px;
+  }
+
+  .pipeline-arrow {
+    color: #4d9cff;
+    font-size: 18px;
+    margin-top: 14px;
+  }
+
+  .alert-list {
+    margin-top: 17px;
+  }
+
+  .alert {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 0;
+    border-bottom: 1px solid #172337;
+  }
+
+  .alert:last-child {
+    border-bottom: 0;
+  }
+
+  .alert-icon {
+    width: 21px;
+    height: 21px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    font-size: 11px;
+  }
+
+  .success-alert {
+    background: rgba(0, 220, 138, 0.15);
+    color: #00dc8a;
+  }
+
+  .warning-alert {
+    background: rgba(240, 170, 25, 0.15);
+    color: #f5b82e;
+  }
+
+  .error-alert {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef5963;
+  }
+
+  .alert div {
+    flex: 1;
+  }
+
+  .alert strong {
+    display: block;
+    color: #b7c1d0;
+    font-size: 9px;
+    font-weight: 500;
+  }
+
+  .alert small {
+    display: block;
+    color: #596880;
+    margin-top: 3px;
+    font-size: 8px;
+  }
+
+  .alert-label {
+    padding: 4px 7px;
+    border-radius: 4px;
+    font-size: 7px;
+  }
+
+  .alert-label.info {
+    background: rgba(34, 126, 239, 0.18);
+    color: #4e9eff;
+  }
+
+  .alert-label.warning {
+    background: rgba(239, 171, 35, 0.15);
+    color: #e9ad2e;
+  }
+
+  .alert-label.error {
+    background: rgba(0, 210, 130, 0.12);
+    color: #00d88a;
+  }
+
+  /* ================= FOOTER ================= */
 
   .footer {
-    flex-direction: column;
-    gap: 5px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    color: #46546b;
+    font-size: 9px;
   }
-}
-/* ============================================================
-   LIVE TRUCK TELEMETRY
-============================================================ */
 
-.truck-panel {
-  margin-top: 24px;
-}
+  /* ================= RESPONSIVE ================= */
 
-.truck-grid {
+  @media (max-width: 1250px) {
+    .stats-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .charts-grid,
+    .middle-grid,
+    .bottom-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 850px) {
+    .sidebar {
+      width: 220px;
+    }
+
+    .main-content {
+      margin-left: 220px;
+      width: calc(100% - 220px);
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .page-header {
+      flex-direction: column;
+      gap: 18px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .sidebar {
+      display: none;
+    }
+
+    .main-content {
+      margin-left: 0;
+      width: 100%;
+    }
+
+    .content {
+      padding: 20px 15px;
+    }
+
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .topbar {
+      padding: 0 15px;
+    }
+
+    .system-status {
+      display: none;
+    }
+
+    .header-actions {
+      width: 100%;
+    }
+
+    .time-select,
+    .refresh-button {
+      flex: 1;
+      justify-content: center;
+    }
+
+    .footer {
+      flex-direction: column;
+      gap: 5px;
+    }
+  }
+  /* ============================================================
+    LIVE TRUCK TELEMETRY
+  ============================================================ */
+
+  .truck-panel {
+    margin-top: 24px;
+  }
+
+  .truck-grid {
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(250px, 1fr)
+    );
+    gap: 18px;
+    margin-top: 20px;
+  }
+
+  .truck-card {
+    background: rgba(20, 18, 35, 0.8);
+    border: 1px solid rgba(139, 92, 246, 0.25);
+    border-radius: 14px;
+    padding: 18px;
+    transition: 0.25s;
+  }
+
+  .truck-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(139, 92, 246, 0.7);
+    box-shadow:
+      0 10px 30px
+      rgba(139, 92, 246, 0.15);
+  }
+
+  .truck-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+
+  .truck-card-header h3 {
+    margin: 0;
+    font-size: 17px;
+  }
+
+  .truck-status {
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  .truck-status.healthy {
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.12);
+  }
+
+  .truck-status.warning {
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.12);
+  }
+
+  .truck-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .truck-metrics div {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .truck-metrics span {
+    font-size: 11px;
+    opacity: 0.6;
+  }
+
+  .truck-metrics strong {
+    font-size: 15px;
+    color: white;
+  }
+
+  .truck-card small {
+    display: block;
+    margin-top: 18px;
+    opacity: 0.5;
+    font-size: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 768px) {
+
+    .truck-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .truck-metrics {
+      grid-template-columns: 1fr;
+    }
+
+  }
+
+  /* ================================
+    StreamForge Login Page
+    ================================ */
+
+  .login-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #0f172a;
+    font-family: Arial, sans-serif;
+  }
+
+  .login-box {
+    width: 380px;
+    padding: 40px;
+    background: #1e293b;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .login-box h1 {
+    margin-bottom: 10px;
+    color: #38bdf8;
+    font-size: 32px;
+  }
+
+  .login-box p {
+    color: #94a3b8;
+    margin-bottom: 30px;
+  }
+
+  .login-box form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .login-box input {
+    padding: 14px;
+    border: 1px solid #475569;
+    border-radius: 8px;
+    background: #0f172a;
+    color: white;
+    font-size: 15px;
+    outline: none;
+  }
+
+  .login-box input:focus {
+    border-color: #38bdf8;
+  }
+
+  .login-box button {
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    background: #38bdf8;
+    color: #0f172a;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .login-box button:hover {
+    background: #0ea5e9;
+  }
+
+  .login-error {
+    color: #f87171 !important;
+    margin: 0 !important;
+    font-size: 14px;
+  }
+  /* =====================================================
+    STREAMFORGE 3D NEON TRUCK
+    ===================================================== */
+
+  .login-truck {
+    position: absolute;
+
+    left: 30%;
+    bottom: 8%;
+
+    width: 520px;
+    height: 330px;
+
+    z-index: 5;
+
+    pointer-events: none;
+
+    perspective: 1000px;
+  }
+
+
+  /* ---------- Purple Glow ---------- */
+
+  .truck-glow {
+    position: absolute;
+
+    left: 30px;
+    bottom: 20px;
+
+    width: 470px;
+    height: 80px;
+
+    background: #7c3cff;
+
+    filter: blur(45px);
+
+    opacity: 0.45;
+
+    border-radius: 50%;
+  }
+
+
+  /* ---------- Main Truck ---------- */
+
+  .truck {
+    position: absolute;
+
+    left: 20px;
+    bottom: 45px;
+
+    width: 480px;
+    height: 210px;
+
+    transform:
+      rotateX(3deg)
+      rotateY(-7deg)
+      rotateZ(0deg);
+
+    transform-style: preserve-3d;
+
+    filter:
+      drop-shadow(
+        0 15px 25px
+        rgba(0,0,0,0.7)
+      );
+  }
+
+
+  /* ---------- Trailer ---------- */
+
+  .truck-trailer {
+    position: absolute;
+
+    left: 0;
+    top: 25px;
+
+    width: 300px;
+    height: 135px;
+
+    border-radius: 8px;
+
+    background:
+      linear-gradient(
+        145deg,
+        #16152c,
+        #080914 70%
+      );
+
+    border:
+      2px solid
+      rgba(157, 76, 255, 0.8);
+
+    box-shadow:
+      inset 0 0 30px
+      rgba(132, 53, 255, 0.18),
+
+      0 0 20px
+      rgba(123, 48, 255, 0.35);
+
+    transform:
+      skewY(-3deg);
+  }
+
+
+  /* Trailer top edge */
+
+  .truck-trailer::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: -6px;
+
+    width: 100%;
+    height: 5px;
+
+    background: #a25cff;
+
+    box-shadow:
+      0 0 12px #8a3cff;
+  }
+
+
+  /* Trailer logo */
+
+  .trailer-logo {
+    position: absolute;
+
+    left: 45px;
+    top: 48px;
+
+    font-size: 18px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    color: white;
+
+    text-shadow:
+      0 0 10px #8b4cff;
+  }
+
+  .trailer-line {
+    position: absolute;
+
+    left: 20px;
+    right: 20px;
+
+    bottom: 18px;
+
+    height: 2px;
+
+    background:
+      linear-gradient(
+        90deg,
+        transparent,
+        #8b4cff,
+        transparent
+      );
+
+    box-shadow:
+      0 0 10px #8b4cff;
+  }
+
+
+  /* ---------- Cabin ---------- */
+
+  .truck-cabin {
+    position: absolute;
+
+    left: 275px;
+    top: 5px;
+
+    width: 190px;
+    height: 180px;
+
+    background:
+      linear-gradient(
+        135deg,
+        #252040,
+        #080912 65%
+      );
+
+    border:
+      2px solid
+      #9252ff;
+
+    border-radius:
+      25px 28px 12px 8px;
+
+    box-shadow:
+      inset -20px -20px 35px
+      rgba(0,0,0,0.6),
+
+      inset 10px 0 25px
+      rgba(138, 65, 255, 0.18),
+
+      0 0 25px
+      rgba(121, 47, 255, 0.4);
+  }
+
+
+  /* ---------- Windshield ---------- */
+
+  .truck-window {
+    position: absolute;
+
+    left: 25px;
+    top: 22px;
+
+    width: 125px;
+    height: 55px;
+
+    background:
+      linear-gradient(
+        135deg,
+        #11152b,
+        #27204d
+      );
+
+    border:
+      2px solid
+      rgba(174, 111, 255, 0.7);
+
+    border-radius:
+      12px 18px 5px 5px;
+
+    transform:
+      skewX(-8deg);
+
+    box-shadow:
+      inset 0 0 15px
+      rgba(123, 59, 255, 0.25);
+  }
+
+
+  /* ---------- Front ---------- */
+
+  .truck-front {
+    position: absolute;
+
+    right: -17px;
+    bottom: 15px;
+
+    width: 55px;
+    height: 105px;
+
+    border-radius:
+      8px 18px 10px 8px;
+
+    background:
+      linear-gradient(
+        90deg,
+        #17162b,
+        #080912
+      );
+
+    border:
+      1px solid #8145ec;
+  }
+
+
+  /* ---------- Grille ---------- */
+
+  .truck-grille {
+    position: absolute;
+
+    left: 13px;
+    top: 30px;
+
+    width: 30px;
+    height: 42px;
+
+    border:
+      2px solid #7540d8;
+
+    border-radius: 5px;
+
+    background:
+      repeating-linear-gradient(
+        0deg,
+        #080912 0px,
+        #080912 5px,
+        #4b2c83 6px,
+        #080912 8px
+      );
+  }
+
+
+  /* ---------- Headlights ---------- */
+
+  .truck-light {
+    position: absolute;
+
+    width: 11px;
+    height: 24px;
+
+    background: #c6a3ff;
+
+    border-radius: 5px;
+
+    box-shadow:
+      0 0 10px #b77aff,
+      0 0 25px #8b3cff;
+  }
+
+  .truck-light.left {
+    left: -5px;
+    top: 72px;
+  }
+
+  .truck-light.right {
+    right: -5px;
+    top: 72px;
+  }
+
+
+  /* ---------- Door ---------- */
+
+  .truck-door {
+    position: absolute;
+
+    left: 18px;
+    bottom: 15px;
+
+    width: 70px;
+    height: 75px;
+
+    border:
+      1px solid
+      rgba(153, 87, 255, 0.5);
+
+    border-radius: 5px;
+
+    background:
+      rgba(25, 20, 48, 0.45);
+  }
+
+  .truck-door span {
+    position: absolute;
+
+    left: 26px;
+    top: 28px;
+
+    font-size: 20px;
+
+    font-weight: 900;
+
+    color: #9c5cff;
+
+    text-shadow:
+      0 0 10px #853aff;
+  }
+
+
+  /* ---------- Wheels ---------- */
+
+  .truck-wheel {
+    position: absolute;
+
+    width: 57px;
+    height: 57px;
+
+    border-radius: 50%;
+
+    background:
+      radial-gradient(
+        circle,
+        #9b63ff 0%,
+        #49228e 20%,
+        #090a11 24%,
+        #090a11 58%,
+        #4f327f 61%,
+        #080912 70%
+      );
+
+    border:
+      3px solid #2b2048;
+
+    box-shadow:
+      0 0 12px
+      rgba(139, 66, 255, 0.55);
+
+    z-index: 10;
+  }
+
+  .truck-wheel div {
+    position: absolute;
+
+    width: 15px;
+    height: 15px;
+
+    left: 18px;
+    top: 18px;
+
+    border-radius: 50%;
+
+    background: #b37aff;
+
+    box-shadow:
+      0 0 10px #8e45ff;
+  }
+
+
+  /* Wheel positions */
+
+  .wheel-1 {
+    left: 65px;
+    bottom: 5px;
+  }
+
+  .wheel-2 {
+    left: 215px;
+    bottom: 5px;
+  }
+
+  .wheel-3 {
+    left: 320px;
+    bottom: 5px;
+  }
+
+  .wheel-4 {
+    left: 405px;
+    bottom: 5px;
+  }
+
+
+  /* =====================================================
+    TRUCK ANIMATION
+    ===================================================== */
+
+  .login-truck .truck {
+    animation:
+      truckFloat 4s ease-in-out infinite;
+  }
+
+  @keyframes truckFloat {
+
+    0% {
+      transform:
+        translateY(0)
+        rotateX(3deg)
+        rotateY(-7deg);
+    }
+
+    50% {
+      transform:
+        translateY(-8px)
+        rotateX(3deg)
+        rotateY(-7deg);
+    }
+
+    100% {
+      transform:
+        translateY(0)
+        rotateX(3deg)
+        rotateY(-7deg);
+    }
+  }
+
+
+  /* =====================================================
+    SMALL SCREENS
+    ===================================================== */
+
+  @media (max-width: 1200px) {
+
+    .login-truck {
+      left: 18%;
+      transform: scale(0.85);
+      transform-origin: bottom left;
+    }
+  }
+
+  @media (max-width: 900px) {
+
+    .login-truck {
+      left: 5%;
+      transform: scale(0.65);
+      transform-origin: bottom left;
+    }
+  }
+  /* =========================================================
+   STREAMFORGE LOGIN PAGE
+   ========================================================= */
+
+.exact-login-page {
+  min-height: 100vh;
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(250px, 1fr)
-  );
-  gap: 18px;
-  margin-top: 20px;
+  grid-template-columns: 65% 35%;
+  background: #030712;
+  color: white;
+  overflow: hidden;
+  position: relative;
+  font-family: Inter, Arial, sans-serif;
 }
 
-.truck-card {
-  background: rgba(20, 18, 35, 0.8);
-  border: 1px solid rgba(139, 92, 246, 0.25);
+
+/* =========================================================
+   LEFT SIDE
+   ========================================================= */
+
+.exact-login-left {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #050914;
+  border-right: 1px solid rgba(139, 92, 246, 0.15);
+}
+
+.login-background-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+}
+
+.login-image-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(3, 7, 18, 0.15),
+      rgba(3, 7, 18, 0.35)
+    ),
+    linear-gradient(
+      0deg,
+      rgba(3, 7, 18, 0.55),
+      transparent 50%
+    );
+}
+
+
+/* =========================================================
+   LEFT CONTENT
+   ========================================================= */
+
+.login-left-content {
+  position: absolute;
+  z-index: 8;
+  left: 5.5%;
+  top: 20%;
+}
+
+.login-small-title {
+  color: #b56cff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 5px;
+  margin-bottom: 25px;
+}
+
+.login-left-content h1 {
+  margin: 0;
+  font-size: clamp(48px, 4.8vw, 78px);
+  line-height: 0.98;
+  font-weight: 800;
+  letter-spacing: -3px;
+  text-shadow: 0 5px 30px rgba(0, 0, 0, 0.45);
+}
+
+.login-left-content h1 span {
+  color: #8b5cf6;
+  text-shadow:
+    0 0 25px rgba(139, 92, 246, 0.5);
+}
+
+.login-left-content p {
+  margin-top: 28px;
+  font-size: 17px;
+  line-height: 1.8;
+  color: #d2d7e7;
+}
+
+
+/* =========================================================
+   FEATURES
+   ========================================================= */
+
+.login-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px 45px;
+  margin-top: 38px;
+}
+
+.login-feature {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 230px;
+}
+
+.feature-icon {
+  width: 55px;
+  height: 55px;
+  border: 1px solid rgba(163, 94, 255, 0.8);
   border-radius: 14px;
-  padding: 18px;
-  transition: 0.25s;
-}
-
-.truck-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(139, 92, 246, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c084fc;
+  font-size: 25px;
+  background: rgba(20, 12, 45, 0.7);
   box-shadow:
-    0 10px 30px
-    rgba(139, 92, 246, 0.15);
+    0 0 20px rgba(139, 92, 246, 0.25);
 }
 
-.truck-card-header {
+.login-feature strong {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 7px;
+}
+
+.login-feature span {
+  display: block;
+  color: #a8afc5;
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   3D TRUCK
+   ========================================================= */
+
+.login-truck {
+  position: absolute;
+  z-index: 5;
+  width: 58%;
+  height: 42%;
+  left: 29%;
+  top: 43%;
+  perspective: 1200px;
+  pointer-events: none;
+}
+
+.truck-glow {
+  position: absolute;
+  width: 75%;
+  height: 25%;
+  left: 12%;
+  bottom: 8%;
+  background: rgba(139, 92, 246, 0.55);
+  filter: blur(35px);
+  border-radius: 50%;
+  transform: rotate(-4deg);
+}
+
+.truck {
+  position: absolute;
+  left: 5%;
+  bottom: 12%;
+  width: 90%;
+  height: 70%;
+  transform:
+    rotateY(-10deg)
+    rotateX(2deg)
+    rotateZ(-1deg);
+  transform-style: preserve-3d;
+}
+
+
+/* Trailer */
+
+.truck-trailer {
+  position: absolute;
+  left: 0;
+  bottom: 18%;
+  width: 64%;
+  height: 62%;
+  border-radius: 5px;
+  background:
+    linear-gradient(
+      145deg,
+      #22213d,
+      #090a16 55%,
+      #19142e
+    );
+  border: 2px solid rgba(159, 89, 255, 0.65);
+  box-shadow:
+    0 0 25px rgba(139, 92, 246, 0.35),
+    inset 0 0 30px rgba(139, 92, 246, 0.12);
+  transform: skewY(-2deg);
+}
+
+.trailer-logo {
+  position: absolute;
+  left: 9%;
+  top: 38%;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: white;
+  text-shadow:
+    0 0 15px rgba(139, 92, 246, 0.8);
+}
+
+.trailer-logo span {
+  color: #a855f7;
+}
+
+.trailer-line {
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  bottom: 17%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #a855f7,
+    transparent
+  );
+  box-shadow:
+    0 0 10px rgba(168, 85, 247, 0.8);
+}
+
+.trailer-data {
+  position: absolute;
+  left: 9%;
+  bottom: 7%;
+  color: #9da5bd;
+  font-size: 7px;
+  letter-spacing: 3px;
+}
+
+
+/* Cabin */
+
+.truck-cabin {
+  position: absolute;
+  right: 4%;
+  bottom: 12%;
+  width: 38%;
+  height: 70%;
+  border-radius: 18px 25px 7px 7px;
+  background:
+    linear-gradient(
+      145deg,
+      #33275a,
+      #0b0b18 50%,
+      #20173b
+    );
+  border: 2px solid rgba(164, 93, 255, 0.8);
+  box-shadow:
+    0 0 30px rgba(139, 92, 246, 0.4),
+    inset 0 0 25px rgba(139, 92, 246, 0.15);
+  transform-style: preserve-3d;
+}
+
+.truck-roof {
+  position: absolute;
+  top: -7%;
+  left: 7%;
+  width: 82%;
+  height: 13%;
+  border-radius: 18px 18px 5px 5px;
+  background: linear-gradient(
+    90deg,
+    #161326,
+    #5b3b94,
+    #17132a
+  );
+  border: 1px solid rgba(180, 110, 255, 0.6);
+}
+
+
+/* Window */
+
+.truck-window {
+  position: absolute;
+  top: 13%;
+  left: 10%;
+  width: 75%;
+  height: 28%;
+  border-radius: 8px 12px 4px 4px;
+  background:
+    linear-gradient(
+      135deg,
+      #111a2e,
+      #05060d
+    );
+  border: 1px solid rgba(165, 116, 255, 0.7);
+  overflow: hidden;
+}
+
+.window-reflection {
+  position: absolute;
+  width: 80%;
+  height: 2px;
+  left: 5%;
+  top: 35%;
+  background: #d2b7ff;
+  opacity: 0.35;
+  transform: rotate(-18deg);
+  box-shadow:
+    0 0 15px #a855f7;
+}
+
+
+/* Front */
+
+.truck-front {
+  position: absolute;
+  right: -4%;
+  bottom: 4%;
+  width: 26%;
+  height: 50%;
+  border-radius: 4px 10px 7px 4px;
+  background:
+    linear-gradient(
+      90deg,
+      #18162a,
+      #0a0a13
+    );
+  border-left: 2px solid rgba(167, 99, 255, 0.7);
+}
+
+.truck-grille {
+  position: absolute;
+  left: 20%;
+  top: 27%;
+  width: 60%;
+  height: 42%;
+  border: 1px solid rgba(164, 116, 255, 0.5);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 4px;
+}
+
+.truck-grille span {
+  display: block;
+  height: 2px;
+  background: rgba(180, 160, 220, 0.5);
+}
+
+.truck-light {
+  position: absolute;
+  bottom: 10%;
+  width: 25%;
+  height: 12%;
+  background: #d8c7ff;
+  border-radius: 5px;
+  box-shadow:
+    0 0 15px #c084fc,
+    0 0 35px #8b5cf6;
+}
+
+.truck-light.left {
+  left: 5%;
+}
+
+.truck-light.right {
+  right: 5%;
+}
+
+
+/* Door */
+
+.truck-door {
+  position: absolute;
+  left: 6%;
+  bottom: 5%;
+  width: 35%;
+  height: 52%;
+  border-right: 1px solid rgba(163, 94, 255, 0.45);
+  border-bottom: 1px solid rgba(163, 94, 255, 0.35);
+}
+
+.truck-door span {
+  position: absolute;
+  left: 42%;
+  top: 42%;
+  font-weight: 800;
+  color: #a855f7;
+  text-shadow:
+    0 0 12px rgba(168, 85, 247, 0.8);
+}
+
+.door-handle {
+  position: absolute;
+  right: 10%;
+  top: 25%;
+  width: 15px;
+  height: 3px;
+  border-radius: 3px;
+  background: #aaa4b8;
+}
+
+
+/* Mirror */
+
+.truck-mirror {
+  position: absolute;
+  right: -11%;
+  top: 28%;
+  width: 13%;
+  height: 16%;
+  border: 2px solid #a855f7;
+  border-radius: 50%;
+  box-shadow:
+    0 0 10px rgba(168, 85, 247, 0.7);
+}
+
+
+/* Wheels */
+
+.truck-wheel {
+  position: absolute;
+  bottom: 2%;
+  width: 13%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle,
+      #252335 0 25%,
+      #08080e 27% 55%,
+      #4c3b69 58% 62%,
+      #08080e 65%
+    );
+  border: 2px solid #756083;
+  box-shadow:
+    0 0 12px rgba(0, 0, 0, 0.8),
+    0 0 12px rgba(139, 92, 246, 0.3);
+}
+
+.wheel-1 {
+  left: 14%;
+}
+
+.wheel-2 {
+  left: 31%;
+}
+
+.wheel-3 {
+  right: 18%;
+}
+
+.wheel-4 {
+  right: 3%;
+}
+
+.wheel-inner {
+  position: absolute;
+  inset: 30%;
+  border-radius: 50%;
+  border: 2px solid #9c7ac4;
+}
+
+.wheel-inner span {
+  position: absolute;
+  inset: 35%;
+  border-radius: 50%;
+  background: #c084fc;
+  box-shadow:
+    0 0 8px rgba(192, 132, 252, 0.8);
+}
+
+
+/* =========================================================
+   TELEMETRY CARD
+   ========================================================= */
+
+.truck-telemetry-card {
+  position: absolute;
+  z-index: 10;
+  right: 3%;
+  top: 14%;
+  width: 220px;
+  padding: 22px;
+  border: 1px solid rgba(139, 92, 246, 0.65);
+  border-radius: 18px;
+  background: rgba(8, 10, 25, 0.82);
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 0 35px rgba(89, 39, 170, 0.25);
+}
+
+.telemetry-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 18px;
 }
 
-.truck-card-header h3 {
-  margin: 0;
-  font-size: 17px;
+.telemetry-header strong {
+  font-size: 13px;
 }
 
-.truck-status {
+.live-status {
+  color: #31e6a3;
   font-size: 11px;
-  padding: 5px 10px;
-  border-radius: 20px;
-  font-weight: 600;
-}
-
-.truck-status.healthy {
-  color: #22c55e;
-  background: rgba(34, 197, 94, 0.12);
-}
-
-.truck-status.warning {
-  color: #f59e0b;
-  background: rgba(245, 158, 11, 0.12);
-}
-
-.truck-metrics {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-.truck-metrics div {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 6px;
 }
 
-.truck-metrics span {
-  font-size: 11px;
-  opacity: 0.6;
+.live-status i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #31e6a3;
+  box-shadow:
+    0 0 12px #31e6a3;
 }
 
-.truck-metrics strong {
-  font-size: 15px;
-  color: white;
-}
-
-.truck-card small {
-  display: block;
-  margin-top: 18px;
-  opacity: 0.5;
-  font-size: 10px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-@media (max-width: 768px) {
-
-  .truck-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .truck-metrics {
-    grid-template-columns: 1fr;
-  }
-
-}
-
-/* ================================
-   StreamForge Login Page
-   ================================ */
-
-.login-container {
-  min-height: 100vh;
+.telemetry-row {
   display: flex;
-  justify-content: center;
   align-items: center;
-  background: #0f172a;
-  font-family: Arial, sans-serif;
+  gap: 9px;
+  margin: 13px 0;
+  color: #b5bad0;
+  font-size: 14px;
 }
 
-.login-box {
-  width: 380px;
-  padding: 40px;
-  background: #1e293b;
-  border-radius: 16px;
-  text-align: center;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+.telemetry-row strong {
+  color: white;
+  font-size: 16px;
 }
 
-.login-box h1 {
-  margin-bottom: 10px;
-  color: #38bdf8;
-  font-size: 32px;
+.telemetry-icon {
+  color: #b06cff;
 }
 
-.login-box p {
-  color: #94a3b8;
-  margin-bottom: 30px;
+.telemetry-location {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 15px;
+  margin-top: 12px;
+  color: #b9bdd0;
+  font-size: 12px;
 }
 
-.login-box form {
+
+/* =========================================================
+   BOTTOM LEFT
+   ========================================================= */
+
+.login-bottom-label {
+  position: absolute;
+  z-index: 10;
+  left: 5.5%;
+  bottom: 30px;
+  color: #c2c5d3;
+  font-size: 10px;
+  letter-spacing: 5px;
+}
+
+
+/* =========================================================
+   RIGHT SIDE
+   ========================================================= */
+
+.exact-login-right {
+  position: relative;
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at 50% 55%,
+      rgba(99, 45, 180, 0.13),
+      transparent 48%
+    ),
+    #050813;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  box-sizing: border-box;
 }
 
-.login-box input {
-  padding: 14px;
-  border: 1px solid #475569;
-  border-radius: 8px;
-  background: #0f172a;
+
+/* Quote */
+
+.exact-quote {
+  position: absolute;
+  top: 28px;
+  right: 45px;
+  text-align: right;
+  color: #c18cff;
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+
+/* Login card */
+
+.exact-login-card {
+  width: min(440px, 100%);
+  padding: 35px 38px;
+  border: 1px solid rgba(139, 92, 246, 0.55);
+  border-radius: 20px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(15, 18, 36, 0.96),
+      rgba(5, 8, 20, 0.97)
+    );
+  box-shadow:
+    0 0 50px rgba(79, 35, 160, 0.18),
+    inset 0 0 40px rgba(139, 92, 246, 0.04);
+  box-sizing: border-box;
+  position: relative;
+  z-index: 20;
+}
+
+
+.exact-welcome {
+  text-align: center;
+  color: #aeb5c9;
+  font-size: 19px;
+  margin-bottom: 12px;
+}
+
+.exact-login-title {
+  margin: 0;
+  text-align: center;
+  font-size: 42px;
+  letter-spacing: 2px;
+  color: #f5f5f8;
+}
+
+.exact-login-title span {
+  color: #914fff;
+  text-shadow:
+    0 0 20px rgba(145, 79, 255, 0.4);
+}
+
+.exact-login-subtitle {
+  text-align: center;
+  color: #9299af;
+  margin: 12px 0 35px;
+  font-size: 14px;
+}
+
+
+/* Inputs */
+
+.exact-input {
+  height: 58px;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(96, 104, 145, 0.35);
+  border-radius: 12px;
+  background: rgba(25, 29, 53, 0.75);
+  margin-bottom: 18px;
+  transition: 0.25s;
+  box-sizing: border-box;
+}
+
+.exact-input:focus-within {
+  border-color: #8b5cf6;
+  box-shadow:
+    0 0 20px rgba(139, 92, 246, 0.15);
+}
+
+.exact-input-icon {
+  margin-left: 18px;
+  color: #a56cff;
+  font-size: 20px;
+}
+
+.exact-input input {
+  flex: 1;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
   color: white;
   font-size: 15px;
-  outline: none;
+  padding: 0 14px;
 }
 
-.login-box input:focus {
-  border-color: #38bdf8;
+.exact-input input::placeholder {
+  color: #7f879e;
 }
 
-.login-box button {
-  padding: 14px;
+
+/* Password button */
+
+.exact-password-eye {
+  width: 52px;
+  height: 100%;
   border: none;
-  border-radius: 8px;
-  background: #38bdf8;
-  color: #0f172a;
-  font-size: 16px;
-  font-weight: bold;
+  background: transparent;
+  color: #b5bdcf;
+  font-size: 20px;
   cursor: pointer;
 }
 
-.login-box button:hover {
-  background: #0ea5e9;
+
+/* Error */
+
+.exact-login-error {
+  color: #ff7373;
+  text-align: center;
+  font-size: 13px;
+  margin: -5px 0 15px;
 }
 
-.login-error {
-  color: #f87171 !important;
-  margin: 0 !important;
-  font-size: 14px;
+
+/* Sign in */
+
+.exact-signin {
+  width: 100%;
+  height: 56px;
+  border: none;
+  border-radius: 11px;
+  background:
+    linear-gradient(
+      90deg,
+      #6836ef,
+      #8a38ee
+    );
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  cursor: pointer;
+  box-shadow:
+    0 10px 30px rgba(104, 54, 239, 0.3);
+  transition: 0.2s;
+}
+
+.exact-signin:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 35px rgba(104, 54, 239, 0.45);
+}
+
+
+/* Options */
+
+.exact-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  font-size: 13px;
+  color: #999fb4;
+}
+
+.exact-options label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.exact-options input {
+  accent-color: #8b5cf6;
+}
+
+.exact-forgot {
+  color: #a76aff;
+  cursor: pointer;
+}
+
+
+/* OR */
+
+.exact-or {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 27px 0;
+  color: #777f96;
+}
+
+.exact-or span {
+  flex: 1;
+  height: 1px;
+  background: rgba(150, 155, 175, 0.25);
+}
+
+.exact-or small {
+  font-size: 11px;
+}
+
+
+/* Google */
+
+.exact-google {
+  width: 100%;
+  height: 55px;
+  border: none;
+  border-radius: 11px;
+  background: white;
+  color: #151515;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.exact-google:hover {
+  transform: translateY(-2px);
+}
+
+.google-g {
+  font-size: 20px;
+  font-weight: 800;
+  color: #4285f4;
+}
+
+
+/* Tags */
+
+.exact-tags {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 27px;
+  color: #858da5;
+  font-size: 12px;
+}
+
+.exact-tags b {
+  color: #596076;
+}
+
+
+/* Bottom text */
+
+.exact-bottom-text {
+  position: absolute;
+  bottom: 25px;
+  right: 45px;
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  color: #969db3;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.exact-bottom-text strong {
+  color: white;
+  font-size: 15px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+  .exact-login-page {
+    grid-template-columns: 60% 40%;
+  }
+
+  .login-truck {
+    left: 25%;
+    width: 65%;
+  }
+
+  .truck-telemetry-card {
+    right: 2%;
+    width: 190px;
+  }
+
+  .login-features {
+    gap: 18px;
+  }
+
+}
+
+
+@media (max-width: 900px) {
+
+  .exact-login-page {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+
+  .exact-login-left {
+    min-height: 650px;
+  }
+
+  .exact-login-right {
+    min-height: 700px;
+  }
+
+  .login-left-content {
+    left: 6%;
+    top: 10%;
+  }
+
+  .login-truck {
+    top: 48%;
+    left: 20%;
+    width: 70%;
+  }
+
+  .truck-telemetry-card {
+    top: 9%;
+    right: 5%;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .login-features {
+    grid-template-columns: 1fr;
+  }
+
+  .login-left-content h1 {
+    font-size: 45px;
+  }
+
+  .truck-telemetry-card {
+    transform: scale(0.8);
+    transform-origin: top right;
+  }
+
+  .exact-login-card {
+    padding: 30px 22px;
+  }
+
+  .exact-quote {
+    right: 20px;
+    font-size: 13px;
+  }
+
 }
