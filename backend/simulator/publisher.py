@@ -54,7 +54,7 @@ def main():
 
     finally:
         producer.flush()
-        print("Telemetry publisher stopped.")
+        print("Telemetry publisher stopped." )
 
 
 if __name__ == "__main__":
